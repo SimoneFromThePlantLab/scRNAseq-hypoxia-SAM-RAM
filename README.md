@@ -22,6 +22,9 @@ The scripts are organized according to the main analyses performed in the study:
 - **dot_plot_markers (Figure 1)**
   - Dot plot visualization of selected cell-type marker genes.
 
+- **monocle2 / monocle3 (Figure 3, 4)**
+  - Pseudotime trajectory inference and visualization of gene dynamics.
+
 - **gene_modules (Figure 3)**
   - Pseudotime analysis and identification of gene modules in shoot and root apices.
   - Functional enrichment analysis of gene modules.
@@ -29,9 +32,6 @@ The scripts are organized according to the main analyses performed in the study:
 - **heatmap_overlap (Figure 2 and Supplemental Figures)**
   - Overlap analysis between stem cell markers (SCMs) and hypoxia-responsive genes (HRGs).
   - Generation of heatmaps comparing co-expression patterns across tissues.
-
-- **monocle2 / monocle3 (Figure 3, 4)**
-  - Pseudotime trajectory inference and visualization of gene dynamics.
 
 - **RNA_velocity (Figure 4)**
   - RNA velocity analysis of stem cell and differentiated populations to study transcriptional dynamics.
