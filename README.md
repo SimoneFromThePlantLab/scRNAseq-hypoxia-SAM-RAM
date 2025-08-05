@@ -64,5 +64,5 @@ To execute the analyses:
 ## Notes
 
 - The scripts are provided for transparency and reproducibility.
-- Input data are not included in the repository but can be accessed from [link to data repository, if available] or requested from the corresponding author.
+- Input data are not included in the repository but can be accessed from the Beijing Institute of Genomics Data Center (BioProject PRJCA003094) and from the NCBI SRA database (BioProject PRJNA517021).
 - File names and figure references correspond to those reported in the manuscript for easy navigation.
