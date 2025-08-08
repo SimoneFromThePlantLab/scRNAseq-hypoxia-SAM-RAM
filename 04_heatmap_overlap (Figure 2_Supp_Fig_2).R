@@ -9,7 +9,7 @@ genes_of_interest <- gene_list$GeneID
 for (gene in genes_of_interest) {
   # Identifica le cellule che esprimono il gene
   cells_expressing <- colnames(GetAssayData(seurat_obj, slot = "counts"))[
-    GetAssayData(seurat_obj, slot = "counts")[gene, ] > 0
+    GetAssayData(seurat_obj, slot = "counts")[gene, ] > 10
   ]
   
   # Salva il file CSV con le cellule trovate
@@ -143,3 +143,4 @@ pheatmap(
   cluster_cols = TRUE,    # puoi clusterizzare i geni se vuoi
   main = "HRG expression in stem-like cells (≥10 SCM)"
 )
+
