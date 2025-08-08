@@ -16,24 +16,20 @@ for (gene in genes_of_interest) {
   write.csv(cells_expressing, paste0("cells_expressing_", gene, ".csv"), row.names = FALSE)
 }
 
-# Directory dei file marker e ipossici
-marker_dir <- "~/path/to/Cells_expressing/"   # Modifica con il percorso corretto # QUI PER GRUPPI DI GENI
-hypoxia_dir <- "~path/to/Cells_expressing/" # Modifica con il percorso corretto
+marker_dir <- "~/path/to/Cells_expressing/"  
+hypoxia_dir <- "~path/to/Cells_expressing/" 
 
-# Ottieni i file marker e ipossici
 marker_files <- list.files(marker_dir, pattern = "*.csv", full.names = TRUE)
 hypoxia_files <- list.files(hypoxia_dir, pattern = "*.csv", full.names = TRUE)
 
-# Inizializza un data frame per i risultati
 results <- data.frame(
-  Marker_Gene = character(),        # Nome del gene marker
-  Hypoxia_Gene = character(),       # Nome del gene ipossico
-  Common_Cells = integer(),         # Numero di cellule in comune
-  Total_Cells = integer(),          # Totale delle cellule nel file ipossico
-  Percentage_Common = numeric()     # Percentuale di cellule in comune
+  Marker_Gene = character(),        
+  Hypoxia_Gene = character(),       
+  Common_Cells = integer(),         
+  Total_Cells = integer(),          
+  Percentage_Common = numeric()     
 )
 
-# Loop per confrontare ogni marker con ogni ipossico
 for (marker_file in marker_files) {
   # Leggi il file marker
   marker_cells <- read.csv(marker_file, header = TRUE, stringsAsFactors = FALSE)$x
@@ -54,10 +50,9 @@ for (marker_file in marker_files) {
       NA
     }
     
-    # Aggiungi i risultati al data frame
     results <- rbind(results, data.frame(
-      Marker_Gene = tools::file_path_sans_ext(basename(marker_file)),   # Nome del file marker
-      Hypoxia_Gene = tools::file_path_sans_ext(basename(hypoxia_file)), # Nome del file ipossico
+      Marker_Gene = tools::file_path_sans_ext(basename(marker_file)),   
+      Hypoxia_Gene = tools::file_path_sans_ext(basename(hypoxia_file)), 
       Common_Cells = length(common_cells),
       Total_Cells = total_cells,
       Percentage_Common = percentage_common
@@ -67,28 +62,24 @@ for (marker_file in marker_files) {
 
 library(reshape2)
 
-# Converti i risultati in una matrice per la heatmap
 heatmap_data <- reshape2::acast(results, Marker_Gene ~ Hypoxia_Gene, value.var = "Percentage_Common", fill = 0)
 
-# Filtra i dati per includere solo le combinazioni con almeno il 10% di overlap
 filtered_results <- subset(results, Percentage_Common >= 20)
 
-# Converti i dati filtrati in una matrice per la heatmap
 filtered_heatmap_data <- reshape2::acast(filtered_results, Marker_Gene ~ Hypoxia_Gene, value.var = "Percentage_Common", fill = 0)
 
-# Heatmap con miglioramenti grafici
 tiff("Heatmap_core_xylem.tiff", units = "in", width = 8, height = 4, res = 450)
 ggplot(melt(heatmap_data), aes(x = Var2, y = Var1, fill = value)) +
-  geom_tile(color = "black") +  # Cornice nera per ogni cella
+  geom_tile(color = "black") +  
   scale_fill_gradient(low = "white", high = "red", na.value = "gray") +
-  theme_minimal(base_size = 12) +  # Cambia lo stile base e aumenta la dimensione del testo
+  theme_minimal(base_size = 12) +  
   labs(x = "Hypoxia Genes", y = "Marker Genes", fill = "Percentage") +
   theme(
-    panel.grid.major = element_line(color = "gray80"),  # Linee di griglia
-    panel.grid.minor = element_blank(),  # Rimuove griglia secondaria
-    panel.border = element_rect(color = "black", fill = NA, size = 1),  # Cornice nera
-    axis.text.x = element_text(angle = 90, hjust = 1),  # Ruota le etichette delle colonne
-    axis.text.y = element_text(hjust = 1)  # Migliora leggibilità delle righe
+    panel.grid.major = element_line(color = "gray80"), 
+    panel.grid.minor = element_blank(),  
+    panel.border = element_rect(color = "black", fill = NA, size = 1),  
+    axis.text.x = element_text(angle = 90, hjust = 1),  
+    axis.text.y = element_text(hjust = 1)  
   )
 dev.off()
 
@@ -116,7 +107,7 @@ write.csv(cells_expressing_10, "cells_expressing_10_markers.csv", row.names = FA
 library(pheatmap)
 
 HRG_genes <- gene_list$GeneID  # prima colonna del tuo file
-HRG_genes <- HRG_genes[HRG_genes %in% rownames(seurat_obj)]  # tieni solo geni presenti
+HRG_genes <- HRG_genes[HRG_genes %in% rownames(seurat_obj)]  
 
 counts_mat <- GetAssayData(seurat_obj, slot = "counts")
 
@@ -139,8 +130,9 @@ colnames(heatmap_matrix_t) <- gene_labels[colnames(heatmap_matrix_t)]
 pheatmap(
   heatmap_matrix_t,
   color = colorRampPalette(c("white", "red"))(100),
-  cluster_rows = FALSE,   # ora le righe sono solo 1 (percentuali)
-  cluster_cols = TRUE,    # puoi clusterizzare i geni se vuoi
+  cluster_rows = FALSE,   
+  cluster_cols = TRUE,    
   main = "HRG expression in stem-like cells (≥10 SCM)"
 )
+
 
